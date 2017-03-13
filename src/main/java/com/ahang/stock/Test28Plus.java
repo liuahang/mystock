@@ -46,6 +46,7 @@ public class Test28Plus {
                 	BufferedReader br_stock = null;
                 	br_stock = new BufferedReader(new InputStreamReader(System.in));
                 	 String input_stock = br_stock.readLine();
+                	 input_stock = getRealCode(input_stock);
                 	 System.out.println("代码==" + input_stock);
                 	 double diff_price = getDiffer(service,token,input_stock);
                 	 System.out.println("diff_price==" + diff_price);
@@ -72,7 +73,15 @@ public class Test28Plus {
 		
 	}
 	
-	
+	public static String getRealCode(String stockCode){
+		String realCode = "";
+		if(stockCode.startsWith("0") || stockCode.startsWith("3")){
+			realCode = "sz"+stockCode;
+		}else if(stockCode.startsWith("6")){
+			realCode = "sh" + stockCode;			
+		}
+		return realCode;
+	}
 	public static void functionList(){
 		 System.out.println("(1)、登录");
 		 System.out.println("(2)、上证50对比创业板50");
