@@ -101,6 +101,7 @@ public class StockUtil {
 	 * @创建日期: 2013-1-9 上午11:31:24
 	 */
 	public static String getXieQiuToken(String uri, Map<String, Object> paramsMap) {
+		
 		String token = "";
 		CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
 		HttpPost httpPost = new HttpPost(uri);

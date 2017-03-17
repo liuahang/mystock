@@ -52,6 +52,49 @@ public class StockService {
 	}
 	
 	/**
+	 * 通过代码获取名字
+	 * @param token
+	 * @param symbol
+	 * @return
+	 */
+	public String getNameFromCode(String token,String symbol){
+		String jsonStr = getBaseInfo(token, symbol);
+		String returnStr = "";
+		Map map  = new HashMap();
+		try{
+			 map = JsonUtils.fromJson(jsonStr, Map.class);
+			 return ((Map)map.get(symbol.toUpperCase())).get("name").toString();
+			//System.out.println("map==" + map);	
+		}catch(Exception e){
+			System.out.println("---可能输入了错误的代码---");
+		}
+		
+		return returnStr;
+	}
+	/**
+	 * 通过代码获取基本信息
+	 * @param token
+	 * @param symbol
+	 * @return
+	 */
+	public String getBaseInfo(String token,String symbol){
+		    String str = "";
+			//https://xueqiu.com/v4/stock/quote.json?code=SZ300090&_=1489395459765
+			StringBuffer uri = new StringBuffer("https://xueqiu.com/v4/stock/quote.json?");
+			uri.append("code=").append(symbol).append("&_").append(System.currentTimeMillis());
+			//System.out.println("uri==" + uri);
+			//type=normal
+			Map<String,String> para = new HashMap<String,String>();
+		try {
+		    str = StockUtil.requestGet(uri.toString(), para,token);
+			//System.out.println("str==" + str);
+		} catch (Exception e) {
+			//e.printStackTrace();
+			System.out.println("---可能输入了错误的代码---");
+		}
+			return str;
+	}
+	/**
 	 * 解析stock对象
 	 * @param map
 	 * @return
@@ -59,29 +102,34 @@ public class StockService {
 	public StockInfo parseStockInfo(Map map){
 		StockInfo stockInfo = new StockInfo();
 		List<StockObj> list = stockInfo.getChartlist();
-		if(map != null){
-			stockInfo.setSymbol(((Map)map.get("stock")).get("symbol").toString());
-			ArrayList chartlist = (ArrayList)map.get("chartlist");
-			StockObj obj = null;
-			for(int i = 0;i<chartlist.size();i++){
-				obj = new StockObj();
-			    Map chartMap = (Map)chartlist.get(i);
-				double open = Double.parseDouble(chartMap.get("open").toString());
-				double close = Double.parseDouble(chartMap.get("close").toString());
-				double high = Double.parseDouble(chartMap.get("high").toString());
-				double low = Double.parseDouble(chartMap.get("low").toString());
-				double ma30 = Double.parseDouble(chartMap.get("ma30").toString());
-				String timeStr = chartMap.get("time").toString();
-				String time = StockUtil.getFullCNPatternNow(timeStr);
-				obj.setTime(time.substring(0,10));
-				obj.setClosePrice(close);
-				obj.setHighPrice(high);
-				obj.setLowPrice(low);
-				obj.setOpenPrice(open);
-				obj.setMa30Price(ma30);
-				list.add(obj);
-			}
+		try{
+			if(map != null){
+				stockInfo.setSymbol(((Map)map.get("stock")).get("symbol").toString());
+				ArrayList chartlist = (ArrayList)map.get("chartlist");
+				StockObj obj = null;
+				for(int i = 0;i<chartlist.size();i++){
+					obj = new StockObj();
+				    Map chartMap = (Map)chartlist.get(i);
+					double open = Double.parseDouble(chartMap.get("open").toString());
+					double close = Double.parseDouble(chartMap.get("close").toString());
+					double high = Double.parseDouble(chartMap.get("high").toString());
+					double low = Double.parseDouble(chartMap.get("low").toString());
+					double ma30 = Double.parseDouble(chartMap.get("ma30").toString());
+					String timeStr = chartMap.get("time").toString();
+					String time = StockUtil.getFullCNPatternNow(timeStr);
+					obj.setTime(time.substring(0,10));
+					obj.setClosePrice(close);
+					obj.setHighPrice(high);
+					obj.setLowPrice(low);
+					obj.setOpenPrice(open);
+					obj.setMa30Price(ma30);
+					list.add(obj);
+				}
+			}	
+		}catch(Exception e){
+			System.out.println("---可能输入了错误的代码---");
 		}
+		
 		return stockInfo;
 	}
 	

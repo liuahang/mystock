@@ -7,6 +7,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+
 //import org.apache.logging.log4j.Level;
 import com.ahang.utils.JsonUtils;
 /**
@@ -37,7 +39,6 @@ public class Test28Plus {
                 }else if("2".equals(input)){
                 	 //String token = "89f125c95337d63ade1a5e6ede3882de0be2282f";
                      testSH50_SZ50_28Plus(token);	
-                    // System.out.println("------------------------------\n");
                 }else if("q".equals(input)){
                 	System.exit(0);
                 }else if("3".equals(input)){
@@ -47,9 +48,20 @@ public class Test28Plus {
                 	br_stock = new BufferedReader(new InputStreamReader(System.in));
                 	 String input_stock = br_stock.readLine();
                 	 input_stock = getRealCode(input_stock);
-                	 System.out.println("代码==" + input_stock);
+                	 //System.out.println("代码==" + input_stock);
                 	 double diff_price = getDiffer(service,token,input_stock);
+                	 String stockName = service.getNameFromCode(token, input_stock);
+                	 System.out.println();
+                	 System.out.println();
+                	 System.out.println("------------------------------");
+                	 System.out.println("stock_code==" + input_stock);
+                	 System.out.println("stock_name==" + stockName);
                 	 System.out.println("diff_price==" + diff_price);
+                	 if(diff_price>=0){
+                		 System.out.println("建议待涨");
+                	 }else{
+                		 System.out.println("建议空仓");
+                	 }
                 }
                 else if("help".equals("help")){
                 	functionList();
@@ -113,21 +125,25 @@ public class Test28Plus {
 		Double sz399006 = getDiffer(service,token,sz50);//SZ399006
 		String sh000016_str = DobuleToStr(sh000016);
 		String sz399006_str = DobuleToStr(sz399006);
+		System.out.println();
+     	System.out.println();
+   	    System.out.println("------------------------------");
 		if(sh000016<0&&sz399006<0){
-			System.out.println("上证50涨幅:"+sh000016_str + ",    创业板50涨幅："+sz399006_str + ",   持有：银华日利");
+			System.out.println("上证50涨幅:"+sh000016_str + ",\n创业板50涨幅："+sz399006_str + ",\n持有：银华日利");
 		}else if(sh000016<0&&sz399006>0){
-			System.out.println("上证50涨幅:"+sh000016_str + ",   创业板50涨幅："+sz399006_str + ",   持有：创业板50");
+			System.out.println("上证50涨幅:"+sh000016_str + ",\n创业板50涨幅："+sz399006_str + ",\n持有：创业板50");
 		}else if(sh000016>0&&sz399006<0){
-			System.out.println("上证50涨幅:"+sh000016_str + ",   创业板50涨幅："+sz399006_str + ",   持有：上证50");
+			System.out.println("上证50涨幅:"+sh000016_str + ",\n创业板50涨幅："+sz399006_str + ",\n持有：上证50");
 		}else if(sh000016>0&&sz399006>0){
 			if(sh000016>sz399006){
 				
-				System.out.println("上证50涨幅:"+sh000016_str + ",   创业板50涨幅："+sz399006_str + ",   持有：上证50");
+				System.out.println("上证50涨幅:"+sh000016_str + ",\n创业板50涨幅："+sz399006_str + ",\n持有：上证50");
 			}else{
-				System.out.println("上证50涨幅:"+sh000016_str + ",   创业板50涨幅："+sz399006_str + ",   持有：创业板50");
+				System.out.println("上证50涨幅:"+sh000016_str + ",\n创业板50涨幅："+sz399006_str + ",\n持有：创业板50");
 			}
 			
 		}
+		 System.out.println("------------------------------\n");
 	}
 	public static String DobuleToStr(Double mydouble){
 		DecimalFormat df = new DecimalFormat("0.####"); // ##表示2位小数  
